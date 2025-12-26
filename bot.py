@@ -86,6 +86,30 @@ def handle_callback(call):
         bot.answer_callback_query(call.id, "Назад к разработке")
         develop_menu(call)
 
+    elif call.data == 'frontwing_btn':
+        improve("aerodynamics", 2)
+        develop_menu(call)
+
+    elif call.data == 'backwing_btn':
+        improve("aerodynamics", 2)
+        develop_menu(call)
+
+    elif call.data == 'effect_btn':
+        improve("aerodynamics", 3)
+        develop_menu(call)
+
+    elif call.data == 'brake_btn':
+        improve("reliability", 2)
+        develop_menu(call)
+
+    elif call.data == 'buyengine_btn':
+        improve("engine", 5)
+        develop_menu(call)
+
+    elif call.data == 'buychassis_btn':
+        improve("chassis", 5)
+        develop_menu(call)
+
 def show_all_teams(call):
     """показать все команды для выбора"""
     markup = InlineKeyboardMarkup(row_width=2)
@@ -198,28 +222,33 @@ def show_game_menu(call, team_name):
     )
 
 def race_menu(call):
-    """меню гонки"""
     markup = InlineKeyboardMarkup(row_width=2)
-    
-    strategy_btn = InlineKeyboardButton('📊 Стратегия', callback_data='strategy_btn')
-    pitstop_btn = InlineKeyboardButton('⏱️ Пит-стоп', callback_data='pitstop_btn')
-    overtake_btn = InlineKeyboardButton('💨 Обгон', callback_data='overtake_btn')
+
     back_btn = InlineKeyboardButton('🔙 Назад', callback_data='back_to_game')
-    
-    markup.add(strategy_btn, pitstop_btn, overtake_btn, back_btn)
-    
+    markup.add(back_btn)
+
+    track = random.choice(TRACKS)
+    team_key = user_teams.get(call.message.chat.id)
+    results = simulate_race(team_key)
+
+    result_text = ""
+    for driver, place in results.items():
+        result_text += f"🏎 {driver} — {place} место\n"
+
     bot.edit_message_text(
         chat_id=call.message.chat.id,
         message_id=call.message.message_id,
-        text="🏁 *Подготовка к гонке*\n\n"
-             "Предстоящая гонка: Бахрейн\n"
-             "Трасса: Сахир\n"
-             "Длина круга: 5.412 км\n"
-             "Количество кругов: 57\n\n"
-             "Выберите действие:",
+        text=
+        f"🏁 *Гонка завершена!*\n\n"
+        f"🌍 Страна: {track['name']}\n"
+        f"🏟 Трасса: {track['circuit']}\n"
+        f"📏 Длина круга: {track['length']} км\n"
+        f"🔁 Кругов: {track['laps']}\n\n"
+        f"*Результаты пилотов:*\n{result_text}",
         reply_markup=markup,
         parse_mode='Markdown'
     )
+
 
 def develop_menu(call):
     """меню разработки"""

@@ -3,8 +3,47 @@ from config import F1_TEAMS_2026
 import math
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bot_instance import *
+import random
+
 
 bot = telebot.TeleBot(BOT_TOKEN)
+
+TRACKS = [
+    {
+        "name": "Бахрейн",
+        "circuit": "Сахир",
+        "laps": 57,
+        "length": 5.412
+    },
+    {
+        "name": "Италия",
+        "circuit": "Монца",
+        "laps": 53,
+        "length": 5.793
+    },
+    {
+        "name": "Монако",
+        "circuit": "Монте-Карло",
+        "laps": 78,
+        "length": 3.337
+    },
+    {
+        "name": "Япония",
+        "circuit": "Сузука",
+        "laps": 53,
+        "length": 5.807
+    }
+]
+
+def simulate_race(team_key):
+    team = F1_TEAMS_2026[team_key]
+    drivers = team["drivers"]
+
+    results = {}
+    for driver in drivers:
+        results[driver] = random.randint(1, 20)
+
+    return results
 
 def get_team_display_name(team_key):
     """получить красивое название команды с эмодзи"""
@@ -98,10 +137,10 @@ def chassissettings(call):
     """настройки шасси"""
     markup = InlineKeyboardMarkup(row_width=2)
 
-    buyengine_btn = InlineKeyboardButton('💰 Приобрести', callback_data='buyengine_btn')
+    buychassis_btn = InlineKeyboardButton('💰 Приобрести', callback_data='buychassis_btn')
     back_btn = InlineKeyboardButton('🔙 Назад', callback_data='develop_back')
     
-    markup.add(buyengine_btn, back_btn)
+    markup.add(buychassis_btn, back_btn)
     
     bot.edit_message_text(
         chat_id=call.message.chat.id,
@@ -111,3 +150,6 @@ def chassissettings(call):
         reply_markup=markup,
         parse_mode='Markdown')
     
+def improve(param, value):
+    parameparameters[param] += value
+
