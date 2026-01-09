@@ -2,3 +2,7 @@ __pycache__/bot_instance.cpython-311.pyc
 __pycache__/bot.cpython-311.pyc
 __pycache__/logic.cpython-311.pyc
 __pycache__/config.cpython-311.pyc
+tsks.py
+old/bot.py
+old/logic.py
+old/config.py
